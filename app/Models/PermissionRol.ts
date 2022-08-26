@@ -1,21 +1,15 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class Profile extends BaseModel {
+export default class PermissionRol extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public id_usuario: number
+  public id_role: number
 
   @column()
-  public celular: string
-
-  @column()
-  public url_facebook: string
-
-  @column()
-  public url_instagram: string
+  public id_permission: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
