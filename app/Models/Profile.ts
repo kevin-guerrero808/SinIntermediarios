@@ -2,14 +2,16 @@ import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Profile extends BaseModel {
+  public static table = 'profiles'
+
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public id_usuario: number
+  public id_user: number
 
   @column()
-  public celular: string
+  public cellphone: string
 
   @column()
   public url_facebook: string

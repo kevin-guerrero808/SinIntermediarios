@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
-export default class PermissionRol extends BaseModel {
+export default class PermissionRole extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 

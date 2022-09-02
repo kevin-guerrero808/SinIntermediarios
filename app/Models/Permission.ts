@@ -3,6 +3,7 @@ import { BaseModel, column, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm
 import Role from './Role'
 
 export default class Permission extends BaseModel {
+  public static table = 'permission'
   @column({ isPrimary: true })
   public id: number
 
@@ -10,7 +11,7 @@ export default class Permission extends BaseModel {
   public url: string
 
   @column()
-  public metodo: string
+  public method: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -19,10 +20,10 @@ export default class Permission extends BaseModel {
   public updatedAt: DateTime
 
   @manyToMany(() => Role, {
-  pivotTable: 'permiso_rol', //Nombre tabla pivote
-  pivotForeignKey: 'id_permiso',
-  pivotRelatedForeignKey:'id_rol'
-  //pivotColumns: ['nombre-columna'] //obtener datos de columnas  adicionales
+    pivotTable: 'permission_rol', //Nombre tabla pivote
+    pivotForeignKey: 'id_permission',
+    pivotRelatedForeignKey:'id_role'
+    //pivotColumns: ['nombre-columna'] //obtener datos de columnas  adicionales
   })
   public roles: ManyToMany<typeof Role>
 }

@@ -4,11 +4,13 @@ import User from './User'
 import Permission from './Permission'
 
 export default class Role extends BaseModel {
+  public static table = 'roles'
+
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public nombre: string
+  public name: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -17,16 +19,16 @@ export default class Role extends BaseModel {
   public updatedAt: DateTime
 
   @hasMany(() => User,{
-    foreignKey: 'id_rol' //Nombre clave propagada de la entidad actual a la dominada
+    foreignKey: 'id_role' //Nombre clave propagada de la entidad actual a la dominada
   })
-  public usuarios: HasMany<typeof User>
+  public users: HasMany<typeof User>
 
   @manyToMany(() => Permission, {
-    pivotTable: 'permiso_rol', //Nombre tabla pivote
-    pivotForeignKey: 'id_rol', //Nombre de la clave que está en esta    entidad
+    pivotTable: 'permission_rol', //Nombre tabla pivote
+    pivotForeignKey: 'id_role', //Nombre de la clave que está en esta    entidad
     //pero en la tabla pivote
-    pivotRelatedForeignKey: 'id_permiso', //Nombre de la segunda clave    //que sirve de pivote en la    relación
+    pivotRelatedForeignKey: 'id_permission', //Nombre de la segunda clave    //que sirve de pivote en la    relación
     //pivotColumns: ['created_at'] //obtener datos de columnas    adicionales
     })
-    public permisos: ManyToMany<typeof Permission>
+    public permissions: ManyToMany<typeof Permission>
 }

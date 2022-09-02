@@ -4,17 +4,19 @@ import Profile from './Profile';
 import Role from './Role';
 
 export default class User extends BaseModel {
+  public static table = 'users'
+
   @column({ isPrimary: true })
   public id: number;
 
   @column()
-  public nombre:string;
+  public name:string;
 
   @column()
-  public correo:string;
+  public email:string;
 
   @column()
-  public contrasena:string;
+  public password:string;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -22,13 +24,17 @@ export default class User extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+  //Colocar este atributo de manera obligatoria
+  @column()
+  public id_role:number
+
   @hasOne(() => Profile, {
-    foreignKey: 'id_User'
+    foreignKey: 'id_user'
   })
   public profile: HasOne<typeof Profile>;
 
   @belongsTo(() => Role,{
-  foreignKey: 'id_rol', //Nombre de la clave foránea de la entidad dominante
+    foreignKey: 'id_role', //Nombre de la clave foránea de la entidad dominante
   })
-  public rol: BelongsTo<typeof Role>
+  public role: BelongsTo<typeof Role>
 }
