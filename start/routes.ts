@@ -29,11 +29,11 @@ Route.post("/roles","RolesController.store");
 Route.get("/roles/:id","RolesController.show");
 Route.put("/roles/:id","RolesController.update");
 // Users
-Route.get("/Users","UsersController.index");
-Route.post("/Users","UsersController.store");
-Route.get("/Users/:id","UsersController.show");
-Route.put("/Users/:id","UsersController.update");
-Route.delete("/Users/:id","UsersController.destroy");
+Route.get("/users","UsersController.index");
+Route.post("/users","UsersController.store");
+Route.get("/users/:id","UsersController.show");
+Route.put("/users/:id","UsersController.update");
+Route.delete("/users/:id","UsersController.destroy");
 Route.post("/login","AuthController.login");
 // Auth
 Route.post("/forgot","AuthController.forgotPassword");
