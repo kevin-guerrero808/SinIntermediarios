@@ -17,7 +17,6 @@ export default class UsersController {
     */
     public async store({request}:HttpContextContract){
         const body=request.body();
-        body.password=Encryption.encrypt(body.password);
         const nuevo_usuario:User=await User.create(body);
         return nuevo_usuario;
     }

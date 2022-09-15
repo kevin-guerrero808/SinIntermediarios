@@ -34,8 +34,8 @@ Route.post("/users","UsersController.store");
 Route.get("/users/:id","UsersController.show");
 Route.put("/users/:id","UsersController.update");
 Route.delete("/users/:id","UsersController.destroy");
-Route.post("/login","AuthController.login");
 // Auth
+Route.post("/login","AuthController.login");
 Route.post("/forgot","AuthController.forgotPassword");
 Route.post("/reset","AuthController.resetPassword");
 Route.post("/logout","AuthController.logout")

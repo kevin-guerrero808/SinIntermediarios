@@ -3,6 +3,7 @@ import ApiToken from 'App/Models/ApiToken';
 import User from "App/Models/User";
 import EmailService from 'App/Services/EmailService';
 import SecurityTemplate from 'App/Services/EmailTemplates/SecurityTemplate';
+import Encryption from '@ioc:Adonis/Core/Encryption'
 
 
 export default class AuthController {
