@@ -23,8 +23,19 @@ import Route from '@ioc:Adonis/Core/Route'
 Route.get('/', async () => {
   return { hello: 'world' }
 });
-Route.get("/usuarios","UsersController.index");
-Route.post("/usuarios","UsersController.store");
-Route.get("/usuarios/:id","UsersController.show");
-Route.put("/usuarios/:id","UsersController.update");
-Route.delete("/usuarios/:id","UsersController.destroy");
+// Roles
+Route.get("/roles","RolesController.index");
+Route.post("/roles","RolesController.store");
+Route.get("/roles/:id","RolesController.show");
+Route.put("/roles/:id","RolesController.update");
+// Users
+Route.get("/Users","UsersController.index");
+Route.post("/Users","UsersController.store");
+Route.get("/Users/:id","UsersController.show");
+Route.put("/Users/:id","UsersController.update");
+Route.delete("/Users/:id","UsersController.destroy");
+Route.post("/login","AuthController.login");
+// Auth
+Route.post("/forgot","AuthController.forgotPassword");
+Route.post("/reset","AuthController.resetPassword");
+Route.post("/logout","AuthController.logout")

@@ -3,7 +3,7 @@ import { BaseModel, beforeSave, belongsTo, BelongsTo, column, HasMany, hasMany, 
 import Profile from './Profile';
 import Role from './Role';
 import ApiToken from './ApiToken';
-import { Hash } from '@ioc:Adonis/';
+import Hash from '@ioc:Adonis/Core/Hash';
 
 export default class User extends BaseModel {
   public static table = 'users'
