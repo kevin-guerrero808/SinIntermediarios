@@ -39,3 +39,15 @@ Route.post("/login","AuthController.login");
 Route.post("/forgot","AuthController.forgotPassword");
 Route.post("/reset","AuthController.resetPassword");
 Route.post("/logout","AuthController.logout")
+// Farmers
+Route.get("/farmers","FarmersController.index");
+Route.post("/farmers","FarmersController.store");
+Route.get("/farmers/:id","FarmersController.show");
+Route.put("/farmers/:id","FarmersController.update");
+Route.delete("/farmers/:id","FarmersController.destroy");
+// Farms
+Route.get("/farms","FarmsController.index");
+Route.post("/farms","FarmsController.store");
+Route.get("/farms/:id","FarmsController.show");
+Route.put("/farms/:id","FarmsController.update");
+Route.delete("/farms/:id","FarmsController.destroy");
