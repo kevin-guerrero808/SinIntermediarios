@@ -5,3 +5,9 @@ coverage
 .DS_STORE
 .env
 tmp
+package.json
+package-lock.json
+ace-manifest.json
+.env.example
+.adonisrc.json
+config/database.ts
