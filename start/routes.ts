@@ -51,3 +51,11 @@ Route.post("/farms","FarmsController.store");
 Route.get("/farms/:id","FarmsController.show");
 Route.put("/farms/:id","FarmsController.update");
 Route.delete("/farms/:id","FarmsController.destroy");
+// Products
+Route.get("/products","FarmsController.index");
+Route.get("/products/:id","FarmsController.show");
+// Products by farmer
+Route.get("/farmers/:id_farm/products/","ProductsController.indexByFarmer");
+Route.post("/farmers/:id_farm/products/","ProductsController.storeByFarmer");
+Route.get("/farmers/:id_farm/products/:id_product","ProductsController.showByFarmer");
+Route.put("/farmers/:id_farm/products/:id_product","ProductsController.updateByFarmer");
