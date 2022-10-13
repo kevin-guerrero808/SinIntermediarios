@@ -21,12 +21,15 @@ export default class Farm extends BaseModel {
   @column()
   public description: string;
 
+  @column()
+  public id_farmer: number
+
   @manyToMany(() => Product, {
     pivotTable: 'product_farms', //Nombre tabla pivote
     pivotForeignKey: 'id_farm', //Nombre de la clave que está en esta    entidad
     //pero en la tabla pivote
     pivotRelatedForeignKey: 'id_product', //Nombre de la segunda clave    //que sirve de pivote en la    relación
-    //pivotColumns: ['created_at'] //obtener datos de columnas    adicionales
+    pivotColumns: ['price', 'quantity'] //obtener datos de columnas    adicionales
   })
   public products: ManyToMany<typeof Product>
 
