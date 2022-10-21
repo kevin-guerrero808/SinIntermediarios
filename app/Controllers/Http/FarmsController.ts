@@ -7,9 +7,10 @@ export default class FarmsController {
       let farmers: Farm[] = await Farm.query()
       return farmers
     }
-    public async store({ request }: HttpContextContract) {
+    public async store({ auth, request }: HttpContextContract) {
       const body = request.body()
       const farmer: Farm = await Farm.create(body)
+      
       return farmer
     }
     public async show({ params }: HttpContextContract) {

@@ -8,7 +8,7 @@ export default class UsersController {
     */
     public async index(ctx:HttpContextContract){
         let users:User[]=await
-        User.query().preload('role').preload('profile')
+        User.query().preload('farmer')
         return users;
     }
 
@@ -25,7 +25,7 @@ export default class UsersController {
     */
     public async show({params}:HttpContextContract) {
         let el_usuario=await
-        User.query().where('id',params.id).preload('profile');
+        User.query().where('id',params.id).preload('farmer');
         return el_usuario;
     }
 
@@ -36,7 +36,6 @@ export default class UsersController {
     public async update({params,request}:HttpContextContract) {
         const body=request.body();
         const el_usuario:User=await User.findOrFail(params.id);
-        el_usuario.name=body.name;
         el_usuario.email=body.email;
         el_usuario.password=Encryption.encrypt(body.password);
         el_usuario.id_role=body.id_role;
@@ -51,7 +50,7 @@ export default class UsersController {
         const profile_user=await
         Profile.findBy('id_user',profile_info.id_user );
         if(profile_user){
-            profile_user.cellphone=profile_info.cellphone;
+            profile_user.phone=profile_info.cellphone;
             profile_user.url_facebook=profile_info.url_facebook;
             profile_user.url_instagram=profile_info.url_instagram;
             profile_user.save();

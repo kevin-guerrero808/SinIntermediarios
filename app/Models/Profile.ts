@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import Farm from './Farm'
 
 export default class Profile extends BaseModel {
   public static table = 'profiles'
@@ -11,7 +12,16 @@ export default class Profile extends BaseModel {
   public id_user: number
 
   @column()
-  public cellphone: string
+  public url_photo: number
+
+  @column()
+  public phone: string
+
+  @column()
+  public first_name: string;
+
+  @column()
+  public last_name: string;
 
   @column()
   public url_facebook: string
@@ -24,4 +34,9 @@ export default class Profile extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => Farm,{
+    foreignKey: 'id_farmer',
+  })
+  public farms: HasMany<typeof Farm>
 }

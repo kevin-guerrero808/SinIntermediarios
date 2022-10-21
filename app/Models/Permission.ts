@@ -3,7 +3,7 @@ import { BaseModel, column, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm
 import Role from './Role'
 
 export default class Permission extends BaseModel {
-  public static table = 'permission'
+  public static table = 'permissions'
   @column({ isPrimary: true })
   public id: number
 
