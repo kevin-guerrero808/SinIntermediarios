@@ -9,9 +9,12 @@ export default class FarmsController {
     }
     public async store({ auth, request }: HttpContextContract) {
       const body = request.body()
-      const farmer: Farm = await Farm.create(body)
+      const farm: Farm = await Farm.create(body)
+      await auth.user?.load('farmer')
+      console.log(auth.user);
+      await auth.user?.farmer.related('farms').save(farm)
       
-      return farmer
+      return farm
     }
     public async show({ params }: HttpContextContract) {
       return Farm.findOrFail(params.id)

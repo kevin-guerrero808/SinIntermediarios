@@ -1,14 +1,13 @@
-import { AuthenticationException } from '@adonisjs/auth/build/standalone';
+import { AuthenticationException } from '@adonisjs/auth/build/standalone'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Permission from 'App/Models/Permission';
-import Profile from 'App/Models/Profile';
-import Role from 'App/Models/Role';
+import Role from 'App/Models/Role'
 
 export default class Permiso {
   public async handle({auth, request, response}: HttpContextContract, next: () => Promise<void>) {
-    // clean and formatte url and method
+    // get id, clean and formatte url and method
     let url = request.url();
     url = url.replace(/^\//,"").replace(/\/$/,"")
+    const urlId = url.match(/^\w+\/(\d+)/)
     url = url.replace(/\/\d+\//,"/[]/")
 
     let method = request.method()
@@ -18,11 +17,13 @@ export default class Permiso {
     await role.load('permissions')
     const permissions  = role.permissions
 
+    // validate if the user url is the same to the authorized user
+    // if(!urlId || !urlId[1] || urlId[1] || auth.user !== auth.user .farmer.id.toString()) {
+    //   this.throwUnauthorizedAccess()
+    // }
+
     if(!(permissions?.length)) {
-      throw new AuthenticationException(
-        'Unauthorized permissions',
-        'E_UNAUTHORIZED_ACCESS'
-      )
+      this.throwUnauthorizedAccess()
     }
 
     let hasAccess = false;    
@@ -39,11 +40,14 @@ export default class Permiso {
     if (hasAccess) {
       await next()
     } else {
-      throw new AuthenticationException(
-        'Unauthorized permissions',
-        'E_UNAUTHORIZED_ACCESS'
-      )
+      this.throwUnauthorizedAccess()
     }
-    
+  }
+
+  private throwUnauthorizedAccess() {
+    throw new AuthenticationException(
+      'Unauthorized permissions',
+      'E_UNAUTHORIZED_ACCESS'
+    )
   }
 }

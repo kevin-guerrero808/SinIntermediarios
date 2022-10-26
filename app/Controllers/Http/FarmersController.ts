@@ -4,7 +4,7 @@ import Farmer from "App/Models/Farmer"
 
 export default class FarmersController {
     public async index(ctx: HttpContextContract) {
-      let farmers: Farmer[] = await Farmer.query()
+      let farmers: Farmer[] = await Farmer.query().preload('farms')
       return farmers
     }
     public async store({ auth, request }: HttpContextContract) {

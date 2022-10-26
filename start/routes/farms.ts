@@ -6,5 +6,4 @@ Route.group(() => {
     Route.get("/farms/:id","FarmsController.show");
     Route.put("/farms/:id","FarmsController.update");
     Route.delete("/farms/:id","FarmsController.destroy");
-    Route.get("/farmers/:id_farmer/farms/","FarmsController.indexByFarmer");
 })

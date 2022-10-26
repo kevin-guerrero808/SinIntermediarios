@@ -16,7 +16,7 @@ export default class AuthController {
         if (await Hash.verify(user.password, password)) {
             //Generación token
             const token = await auth.use('api').generate(user, {
-                expiresIn: '60 mins'
+                expiresIn: '44640 mins' // 31 daies
             })
             let plantilla_email: SecurityTemplate = new SecurityTemplate()
             let html = plantilla_email.newLogin()

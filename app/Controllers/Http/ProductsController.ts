@@ -26,7 +26,8 @@ export default class ProductsController {
       // validate that product don't already exit on the farm
       const farms: Farm[] = await Farm.query().where("id", params.id_farm).preload('products')
       const farm = farms[0];
-      const productAlreadyExist = farm.products.find(product => product.name === body.name)
+
+      const productAlreadyExist = farm.products?.find(product => product.name === body.name)
       if (productAlreadyExist) {
         return {
           "status": "error",
@@ -64,7 +65,7 @@ export default class ProductsController {
       }
 
       return {
-        ...product,
+        ...product.$attributes,
         price: body.price,
         quantity: body.quantity
       };

@@ -22,6 +22,7 @@ export default class RolesController {
     const body = request.body()
     const role: Role = await Role.findOrFail(params.id)
     role.name = body.name
+    role.related('permissions').attach(body.permissions)
     return role.save()
   }
   public async destroy({ params }: HttpContextContract) {

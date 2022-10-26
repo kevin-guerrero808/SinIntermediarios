@@ -6,4 +6,8 @@ Route.group(() => {
     Route.get("/farmers/:id","FarmersController.show");
     Route.put("/farmers/:id","FarmersController.update");
     Route.delete("/farmers/:id","FarmersController.destroy");
+
 }).middleware('auth:api')
+
+import './farms'
+import './products'
