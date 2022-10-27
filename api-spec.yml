@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  version: 1.0.11
+servers:
+  - url: https://121.0.0.7:3333
+paths: 
+  /permissions:
+    get:
+      tags:
+        - Permissions
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permission' 
+    post:
+      tags:
+        - Permissions
+      requestBody:
+        description: Create a new pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Permission'
+        required: true
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'   
+    
+  /permissions/{id_permission}:
+    get:
+      tags:
+        - Permissions
+      parameters:
+        - name: id_permission
+          in: path
+          description: ID of permission
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+    put:
+      tags:
+        - Permissions
+      parameters:
+        - name: id_permission
+          in: path
+          description: ID of permission
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update a permission
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Permission'
+        required: true
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission' 
+    delete:
+      tags:
+        - Permissions
+      parameters:
+        - name: id_permission
+          in: path
+          description: ID of permission
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+  /products:
+    get: 
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product' 
+components:
+  schemas:
+    Permission:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        method:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    Product:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
