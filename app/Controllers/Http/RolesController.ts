@@ -12,7 +12,9 @@ export default class RolesController {
     const role: Role = await Role.create({
       name: body.name
     })
-    role.related('permissions').attach(body.permissions)
+    if (body.permission) {
+      role.related('permissions').attach(body.permissions)
+    }
     return role
   }
   public async show({ params }: HttpContextContract) {
@@ -22,19 +24,21 @@ export default class RolesController {
     const body = request.body()
     const role: Role = await Role.findOrFail(params.id)
     role.name = body.name
-    role.related('permissions').attach(body.permissions)
-    return role.save()
+    if (body.permission) {
+      role.related('permissions').attach(body.permissions)
+    }
+    return await role.save()
   }
   public async destroy({ params }: HttpContextContract) {
-    let user = await User.query().where('id_rol', params.id)
-    if (user) {
+    let user = await User.query().where('id_role', params.id)
+    if (user.length) {
       return {
         error: 'El rol tiene user asociados',
         user: user,
       }
     } else {
       const role: Role = await Role.findOrFail(params.id)
-      return role.delete()
+      return await role.delete()
     }
   }
 }

@@ -35,7 +35,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Permission'   
-    
   /permissions/{id_permission}:
     get:
       tags:
@@ -95,6 +94,95 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Permission'
+  /roles:
+    get:
+      tags:
+        - Roles
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role' 
+    post:
+      tags:
+        - Roles
+      requestBody:
+        description: Create a new role in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'   
+  /roles/{id_role}:
+    get:
+      tags:
+        - Role
+      parameters:
+        - name: id_role
+          in: path
+          description: ID of role
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    put:
+      tags:
+        - Role
+      parameters:
+        - name: id_role
+          in: path
+          description: ID of role
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update a role
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role' 
+    delete:
+      tags:
+        - Role
+      parameters:
+        - name: id_role
+          in: path
+          description: ID of role
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
   /products:
     get: 
       responses:
@@ -116,6 +204,17 @@ components:
         url:
           type: string
         method:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    Role: 
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
           type: string
         createdAt:
           type: string
