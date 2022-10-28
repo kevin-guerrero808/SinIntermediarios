@@ -9,6 +9,7 @@ export default class Permiso {
     url = url.replace(/^\//,"").replace(/\/$/,"")
     const urlId = url.match(/^\w+\/(\d+)/)
     url = url.replace(/\/\d+\//,"/[]/")
+    url = url.replace(/\/\d+$/,"/[]")
 
     let method = request.method()
     method = method.toLowerCase()

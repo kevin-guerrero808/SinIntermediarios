@@ -12,7 +12,7 @@ export default class RolesController {
     const role: Role = await Role.create({
       name: body.name
     })
-    if (body.permission) {
+    if (body.permission?.length) {
       role.related('permissions').attach(body.permissions)
     }
     return role
@@ -24,7 +24,7 @@ export default class RolesController {
     const body = request.body()
     const role: Role = await Role.findOrFail(params.id)
     role.name = body.name
-    if (body.permission) {
+    if (body.permissions?.length) {
       role.related('permissions').attach(body.permissions)
     }
     return await role.save()
