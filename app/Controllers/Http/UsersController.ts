@@ -26,7 +26,7 @@ export default class UsersController {
     public async show({params}:HttpContextContract) {
         let el_usuario=await
         User.query().where('id',params.id).preload('farmer');
-        return el_usuario;
+        return el_usuario[0];
     }
 
     /**
