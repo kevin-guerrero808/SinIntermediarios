@@ -15,7 +15,7 @@
     "check-coverage": true,
     "all": true,
     "include": [
-      "app/**/!(*.test.*).[tj]s?(x)"    
+      "app/**/!(*.test.*).[tj]s?(x)"
     ],
     "exclude": [
       "tests/**/!(*.test.*).[tj]s?(x)"
@@ -72,11 +72,13 @@
   },
   "dependencies": {
     "@adonisjs/auth": "^8.2.2",
+    "@adonisjs/bouncer": "^2.3.0",
     "@adonisjs/core": "^5.8.6",
     "@adonisjs/lucid": "^18.1.0",
     "@adonisjs/repl": "^3.1.11",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@sendgrid/mail": "^7.7.0",
+    "generate-password": "^1.7.0",
     "luxon": "^3.0.1",
     "mysql": "^2.18.1",
     "nyc": "^15.1.0",
