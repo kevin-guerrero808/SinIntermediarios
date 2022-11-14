@@ -272,6 +272,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  /farmers:
+    get:
+      tags:
+        - Farmers
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Farmer' 
+    post:
+      tags:
+        - Farmers
+      requestBody:
+        description: Create a new farmer in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Farmer'
+        required: true
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Farmer'   
   /products:
     get: 
       responses:
@@ -316,6 +346,31 @@ components:
           type: integer
         name:
           type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    Farmer: 
+      type: object
+      properties:
+        id:
+          type: integer
+        url_photo:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        first_name:
+          type: string
+        last_name:
+          type: string
+        url_facebook:
+          type: string
+          nullable: true
+        url_instagram:
+          type: string
+          nullable: true
         createdAt:
           type: string
         updatedAt:
