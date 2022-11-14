@@ -1,7 +1,11 @@
 import Encryption from '@ioc:Adonis/Core/Encryption'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import generator from 'generate-password';
 import Profile from 'App/Models/Profile';
 import User from 'App/Models/User';
+import SecurityTemplate from 'App/Services/EmailTemplates/SecurityTemplate';
+import EmailService from 'App/Services/EmailService';
 export default class UsersController {
     /**
     * Lista todos los usuarios
@@ -12,13 +16,40 @@ export default class UsersController {
         return users;
     }
 
+    public async 
+
    /**
     * Almacena la información de un usuario
     */
-    public async store({request}:HttpContextContract){
-        const body=request.body();
-        const nuevo_usuario:User=await User.create(body);
-        return nuevo_usuario;
+    public async store({ auth, request, response}:HttpContextContract){
+        const schemaPayload = schema.create({
+            name: schema.string(),
+            email: schema.string([
+                rules.email()
+            ]),
+            password: schema.string.optional(),
+            id_role: schema.number(),
+        })
+        const payload = await request.validate({ schema: schemaPayload })
+        const existingUser: User[] = await User.query().where('email',payload.email)
+        if (existingUser && existingUser[0]) {
+            response.badRequest({ error: 'Email already exist' })
+        }
+        payload.password = payload.password ?? generator.generate({
+            length: 10,
+            numbers: true,
+            symbols: true
+        });
+        const newUser : User =await User.create(payload);
+        //Generación token
+        const token = await auth.use('api').generate(newUser, {
+            expiresIn: '44640 mins' // 31 daies
+        })
+        let plantilla_email: SecurityTemplate = new SecurityTemplate()
+        let html = plantilla_email.newUser(token)
+        let el_servicio_email: EmailService = new EmailService();
+        el_servicio_email.sendEmail(payload.email, "Complete register", html)
+        return newUser;
     }
     /**
     * Muestra la información de un solo usuario
@@ -34,29 +65,17 @@ export default class UsersController {
     * en el identificador y nuevos parámetros
     */
     public async update({params,request}:HttpContextContract) {
-        const body=request.body();
-        const el_usuario:User=await User.findOrFail(params.id);
-        el_usuario.email=body.email;
-        el_usuario.password=Encryption.encrypt(body.password);
-        el_usuario.id_role=body.id_role;
-        if(body.perfil){
-            body.perfil.id_user=params.id;
-            await this.setPerfil(body.perfil);
-        }
+        const schemaPayload = schema.create({
+            name: schema.string(),
+            email: schema.string([
+                rules.email()
+            ]),
+            id_role: schema.number(),
+        })
+        const payload = await request.validate({ schema: schemaPayload })
+        const el_usuario:User = await User.findOrFail(params.id);
+        el_usuario.merge(payload);
         return el_usuario.save();
-    }
-
-    public async setPerfil(profile_info){
-        const profile_user=await
-        Profile.findBy('id_user',profile_info.id_user );
-        if(profile_user){
-            profile_user.phone=profile_info.cellphone;
-            profile_user.url_facebook=profile_info.url_facebook;
-            profile_user.url_instagram=profile_info.url_instagram;
-            profile_user.save();
-        }else{
-            await Profile.create(profile_info);
-        }
     }
 
     /**

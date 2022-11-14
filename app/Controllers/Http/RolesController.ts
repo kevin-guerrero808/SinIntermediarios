@@ -1,5 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Permission from 'App/Models/Permission'
+import { schema } from '@ioc:Adonis/Core/Validator'
 import Role from 'App/Models/Role'
 import User from 'App/Models/User'
 export default class RolesController {
@@ -8,12 +8,17 @@ export default class RolesController {
     return roles
   }
   public async store({ request }: HttpContextContract) {
-    const body = request.body()
-    const role: Role = await Role.create({
-      name: body.name
+    const schemaPayload = schema.create({
+      name: schema.string(),
+      permissions: schema.array.optional().members(schema.number()),
     })
-    if (body.permission?.length) {
-      role.related('permissions').attach(body.permissions)
+    const payload = await request.validate({ schema: schemaPayload })
+    
+    const role: Role = await Role.create({
+      name: payload.name
+    })
+    if (payload.permissions?.length) {
+      role.related('permissions').attach(payload.permissions)
     }
     return role
   }
@@ -23,9 +28,9 @@ export default class RolesController {
   public async update({ params, request }: HttpContextContract) {
     const body = request.body()
     const role: Role = await Role.findOrFail(params.id)
-    role.name = body.name
+    role.name = body.name ?? role.name
     if (body.permissions?.length) {
-      role.related('permissions').attach(body.permissions)
+      role.related('permissions').sync(body.permissions)
     }
     return await role.save()
   }

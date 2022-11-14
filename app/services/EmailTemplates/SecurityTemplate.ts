@@ -5,6 +5,10 @@ export default class SecurityTemplate {
         let html="<p>Se ha registrado un nuevo inicio de sesión</p>";
         return html;
     }
+    newUser(token){
+        let html=`<p>Wellcome to SinIntermediarios, complete the information on <a href="${Env.get('URL_FRONTEND')}/#/security/complete-profile/${token}">here</a></p>`;
+        return html;
+    }
     forgotPassword(token){
         let html="<h1>Sistema Demo-Adonis</h1>";
 

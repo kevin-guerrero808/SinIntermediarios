@@ -7,7 +7,7 @@ Route.group(() => {
     Route.put("/farmers/:id","FarmersController.update");
     Route.delete("/farmers/:id","FarmersController.destroy");
 
-}).middleware('auth:api')
+}).middleware(['auth:api'])
 
 import './farms'
 import './products'

@@ -12,31 +12,31 @@ test.group('Permissions controller', (group) => {
   })
 
   test('get permissions', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.get('/permissions').loginAs(user)
 
     response.assertAgainstApiSpec()
   })
   test('post permissions', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.post('/permissions').loginAs(user)
 
     response.assertAgainstApiSpec()
   })
   test('get one permission', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.get('/permissions/2').loginAs(user)
 
     response.assertAgainstApiSpec()
   })
   test('put permissions', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.put('/permissions/2').loginAs(user)
 
     response.assertAgainstApiSpec()
   })
   test('delete permissions', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.delete('/permissions/2').loginAs(user)
 
     response.assertAgainstApiSpec()

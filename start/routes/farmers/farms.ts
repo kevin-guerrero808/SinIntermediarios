@@ -5,4 +5,4 @@ Route.group(() => {
     Route.post("/farmers/:id_farmer/farms/","FarmsController.store")
     Route.get("/farmers/:id_farmer/farms/:id_farm","FarmsController.showByFarmer")
     Route.put("/farmers/:id_farmer/farms/:id_farm","FarmsController.updateByFarmer")
-}).middleware('auth:api')
+}).middleware(['auth:api'])

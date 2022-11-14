@@ -12,13 +12,13 @@ test.group('Users controller', (group) => {
   })
 
   test('get users', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.get('/users').loginAs(user)
 
     response.assertAgainstApiSpec()
   })
   test('post users', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.post('/users').loginAs(user).form({
       name: 'Aleja',
       email: 'alejitasalazar@gmail.com',
@@ -28,21 +28,19 @@ test.group('Users controller', (group) => {
     response.assertAgainstApiSpec()
   })
   test('get one user', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.get('/users/3').loginAs(user)
-
-    response.dump()
 
     response.assertAgainstApiSpec()
   })
   test('put user', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.put('/users/3').loginAs(user)
 
     response.assertAgainstApiSpec()
   })
   test('delete user', async ({client}) => {
-    const user: User =  await User.findOrFail(10);
+    const user: User =  await User.findOrFail(23);
     const response = await client.delete('/users/3').loginAs(user)
 
     response.assertAgainstApiSpec()
