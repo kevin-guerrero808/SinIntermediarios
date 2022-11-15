@@ -12,7 +12,7 @@ export default class Profile extends BaseModel {
   public id_user: number
 
   @column()
-  public url_photo: number
+  public url_photo: string
 
   @column()
   public phone: string
