@@ -16,8 +16,6 @@ export default class UsersController {
         return users;
     }
 
-    public async 
-
    /**
     * Almacena la información de un usuario
     */
@@ -54,17 +52,22 @@ export default class UsersController {
     /**
     * Muestra la información de un solo usuario
     */
-    public async show({params}:HttpContextContract) {
-        let el_usuario=await
-        User.query().where('id',params.id).preload('farmer');
-        return el_usuario[0];
+    public async show({bouncer, params}:HttpContextContract) {
+        let el_usuario=(await
+        User.query().where('id',params.id).preload('farmer'))[0];
+        
+        await bouncer
+        .with('UserPolicy')
+        .authorize('view', el_usuario)
+
+        return el_usuario;
     }
 
     /**
     * Actualiza la información de un usuario basado
     * en el identificador y nuevos parámetros
     */
-    public async update({params,request}:HttpContextContract) {
+    public async update({request, bouncer, params}:HttpContextContract) {
         const schemaPayload = schema.create({
             name: schema.string(),
             email: schema.string([
@@ -73,16 +76,26 @@ export default class UsersController {
             id_role: schema.number(),
         })
         const payload = await request.validate({ schema: schemaPayload })
-        const el_usuario:User = await User.findOrFail(params.id);
-        el_usuario.merge(payload);
-        return el_usuario.save();
+        const user = await User.findOrFail(params.id)
+
+        await bouncer
+        .with('UserPolicy')
+        .authorize('update', user)
+
+        user.merge(payload);
+        return user.save();
     }
 
     /**
     * Elimina a un usuario basado en el identificador
     */
-    public async destroy({params}:HttpContextContract) {
-        const user:User=await User.findOrFail(params.id);
+    public async destroy({bouncer, params}:HttpContextContract) {
+        const user = await User.findOrFail(params.id)
+
+        await bouncer
+        .with('UserPolicy')
+        .authorize('delete', user)
+
         return user.delete();
     }
 }

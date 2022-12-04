@@ -1,33 +1,52 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema } from '@ioc:Adonis/Core/Validator'
+
 import Farm from 'App/Models/Farm'
 import Product from 'App/Models/Product'
 import ProductFarm from 'App/Models/ProductFarm'
 
 export default class ProductsController {
-    public async index(ctx: HttpContextContract) {
-      let products: Product[] = await Product.query()
+    public async index({ request }: HttpContextContract) {
+      const queryParameters = request.qs()
+      let products;
+      if (queryParameters) {
+        if (queryParameters.name) {
+          products = await Product.query().where('name', queryParameters.name)
+        }
+      } else {
+        products = await Product.query()
+      }
       return products
     }
-    public async indexByFarm({ params }: HttpContextContract) {
-      const farm = await Farm.query().where('id',params.id_farm).preload('products', (query) => {
-        query.pivotColumns(['quantity', 'price'])
-      });
-      const products = farm[0].products.map(product => {
-        return {...product.$attributes,
-          quantity: product.$extras.pivot_quantity,
-          price: product.$extras.pivot_price
-        }
-      })
-      return products;
+    public async show({ params }: HttpContextContract) {
+      const product: Product = (await Product.query().where("id", params.id_product))[0]
+
+      return product
     }
-    public async storeByFarm({ request, params }: HttpContextContract) {
-      const body = request.body()
+    public async indexByFarm({ params }: HttpContextContract) {
+      const farm = (await Farm.query().where('id',params.id_farm).preload('products'))[0];
+      return farm.products;
+    }
+    public async store({ request, params, bouncer }: HttpContextContract) {
+      const schemaPayload = schema.create({
+        name: schema.string(),
+        image_url: schema.string.optional(),
+        quantity: schema.number(),
+        unit: schema.string(),
+        price: schema.number(),
+        category: schema.string.optional()
+      })
+      const payload = await request.validate({ schema: schemaPayload })
 
       // validate that product don't already exit on the farm
       const farms: Farm[] = await Farm.query().where("id", params.id_farm).preload('products')
       const farm = farms[0];
 
-      const productAlreadyExist = farm.products?.find(product => product.name === body.name)
+      await bouncer
+      .with('ProductPolicy')
+      .authorize('create', farm)
+
+      const productAlreadyExist = farm.products?.find(product => product.name === payload.name)
       if (productAlreadyExist) {
         return {
           "status": "error",
@@ -35,90 +54,39 @@ export default class ProductsController {
         }
       }
 
-      let products: Product[] = await Product.query().where("name", body.name);
-      let product = products[0]
-      if (product) {
-        // add to existing product
-        product.quantity = product.quantity + body.quantity;
-        await product.save();
-        await farm.related('products').attach({
-          [product.id]: {
-            price: body.price,
-            quantity: body.quantity
-          }
-        })
-      } else {
-        // add new product
-        product = await Product.create({
-          name: body.name,
-          image_url: body.image_url,
-          quantity: body.quantity,
-          unit: body.unit,
-          category: body.category
-        })
-        await farm.related('products').attach({
-          [product.id]: {
-            price: body.price,
-            quantity: body.quantity
-          }
-        })
-      }
+      const product = await farm.related('products').create(payload);
 
-      return {
-        ...product.$attributes,
-        price: body.price,
-        quantity: body.quantity
-      };
+      return product;
     }
-
-    public async showByFarm({ params }: HttpContextContract) {
-      const farms: Farm[] = await Farm.query().where("id", params.id_farm)
-      const farm = farms[0]
-      const products = await farm.related('products')
-                      .query()
-                      .wherePivot('id_product', params.id_product)
-                      .pivotColumns(['quantity', 'price'])
-      const product = products[0]
-
-      return {
-        ...product.$attributes,
-        price: product.$extras.pivot_price,
-        quantity: product.$extras.pivot_quantity
-      }
-    }
-
-    public async updateByFarm({ request, params }: HttpContextContract) {
-      const body = request.body()
+    public async update({ request, params, bouncer }: HttpContextContract) {
+      const schemaPayload = schema.create({
+        name: schema.string.optional(),
+        image_url: schema.string.optional(),
+        quantity: schema.number.optional(),
+        unit: schema.string.optional(),
+        price: schema.number.optional(),
+        category: schema.string.optional()
+      })
+      const payload = await request.validate({ schema: schemaPayload })
 
       // get product
-      const farms: Farm[] = await Farm.query().where("id", params.id_farm)
-      const farm = farms[0]
-      const products = await farm.related('products')
-                      .query()
-                      .wherePivot('id_product', params.id_product)
-                      .pivotColumns(['quantity', 'price'])
-      const product = products[0]
-      
-      // update product
-      product.image_url = body.image_url
-      product.unit = body.unit
-      product.category = body.category
-      const addQuantity = body.quantity - product.$extras.pivot_quantity;
-      product.quantity = product.quantity + addQuantity;
-      await product.save()
+      const product: Product = (await Product.query().where("id", params.id_product))[0]
 
-      // update product farm
-      await farm.related('products').sync({
-        [product.id]: {
-          price: body.price,
-          quantity: body.quantity
-        }
-      })
+      await bouncer
+      .with('ProductPolicy')
+      .authorize('update', product)
 
-      return {
-        ...product.$attributes,
-        price: body.price,
-        quantity: body.quantity
-      }
+      product.merge(payload)
+
+      return product.save()
+    }
+    public async destroy({ params, bouncer }: HttpContextContract) {
+      const product: Product = (await Product.query().where("id", params.id_product))[0]
+
+      await bouncer
+      .with('ProductPolicy')
+      .authorize('delete', product)
+
+      return product.delete()
     }
 }

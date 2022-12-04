@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema } from '@ioc:Adonis/Core/Validator'
 import Farm from 'App/Models/Farm'
 import Farmer from 'App/Models/Farmer'
 
@@ -7,31 +8,57 @@ export default class FarmsController {
       let farmers: Farm[] = await Farm.query()
       return farmers
     }
-    public async store({ auth, request }: HttpContextContract) {
-      const body = request.body()
-      const farm: Farm = await Farm.create(body)
-      await auth.user?.load('farmer')
-      console.log(auth.user);
-      await auth.user?.farmer.related('farms').save(farm)
+    public async store({ auth, bouncer, request }: HttpContextContract) {
+      const schemaPayload = schema.create({
+        name: schema.string(),
+        description: schema.string.optional(),
+        direction: schema.string(),
+        logo_url: schema.string.optional(),
+        imagen_url: schema.string.optional()
+      })
+      const payload = await request.validate({ schema: schemaPayload })
+
+      await bouncer
+      .with('FarmPolicy')
+      .authorize('create')
+
+      const farm: Farm = await Farm.create(payload)
+
+      await auth.user!.load('farmer')
+      await auth.user!.farmer.related('farms').save(farm)
       
       return farm
     }
     public async show({ params }: HttpContextContract) {
       return Farm.findOrFail(params.id)
     }
-    public async update({ params, request }: HttpContextContract) {
-      const body = request.body()
+    public async update({ params, bouncer, request }: HttpContextContract) {
+      const schemaPayload = schema.create({
+        name: schema.string.optional(),
+        description: schema.string.nullableAndOptional(),
+        direction: schema.string.optional(),
+        logo_url: schema.string.nullableAndOptional(),
+        imagen_url: schema.string.nullableAndOptional()
+      })
+      const payload = await request.validate({ schema: schemaPayload })
+      
       const farm: Farm = await Farm.findOrFail(params.id)
-      farm.name = body.name;    
-      farm.direction = body.direction;   
-      farm.logo_url = body.logo_url;   
-      farm.imagen_url = body.imagen_url;   
-      farm.description = body.description;   
+      
+      await bouncer
+      .with('FarmPolicy')
+      .authorize('update', farm)
+
+      farm.merge(payload)
 
       return farm.save()
     }
-    public async destroy({ params }: HttpContextContract) {
+    public async destroy({ params, bouncer }: HttpContextContract) {
       const farm: Farm = await Farm.findOrFail(params.id)
+
+      await bouncer
+      .with('FarmPolicy')
+      .authorize('delete', farm)
+
       return farm.delete()
     }
     public async indexByFarmer({ params }: HttpContextContract) {

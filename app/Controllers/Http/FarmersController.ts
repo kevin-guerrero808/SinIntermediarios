@@ -1,3 +1,4 @@
+import { AuthenticationException } from '@adonisjs/auth/build/standalone'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 
@@ -28,7 +29,7 @@ export default class FarmersController {
       const payload = await request.validate({ schema: schemaPayload })
       const userPayload = await request.validate({ schema: userSchemaPayload })
 
-      if (!auth.user?.farmer) {
+      if (auth.user?.farmer) {
         response.badRequest({ error: 'Farmer already confirmed' })
       }
       const farmer: Farmer = await Farmer.create(payload)
@@ -37,19 +38,42 @@ export default class FarmersController {
       
       return farmer
     }
-    public async show({ params }: HttpContextContract) {
-      return Farmer.findOrFail(params.id)
+    public async show({ bouncer, params }: HttpContextContract) {
+      const farmer = await Farmer.findOrFail(params.id)
+        
+      await bouncer
+      .with('FarmerPolicy')
+      .authorize('view', farmer)
+
+      return farmer;
     }
-    public async update({ params, request }: HttpContextContract) {
-      const body = request.body()
-      const farmer: Farmer = await Farmer.findOrFail(params.id)
-      farmer.first_name = body.first_name;    
-      farmer.last_name = body.last_name;   
-      farmer.phone = body.phone;   
+    public async update({ params, bouncer, request }: HttpContextContract) {
+      const schemaPayload = schema.create({
+        first_name: schema.string.optional(),
+        last_name: schema.string.optional(),
+        url_photo: schema.string.optional(),
+        phone: schema.string.optional(),
+        url_facebook: schema.string.optional(),
+        url_instagram: schema.string.optional(),
+      })
+      const payload = await request.validate({ schema: schemaPayload })
+
+      const farmer = await Farmer.findOrFail(params.id)
+
+      await bouncer
+      .with('FarmerPolicy')
+      .authorize('update', farmer)
+
+      farmer.merge(payload);
       return farmer.save()
     }
-    public async destroy({ params }: HttpContextContract) {
+    public async destroy({ params, bouncer }: HttpContextContract) {
       const farmer: Farmer = await Farmer.findOrFail(params.id)
+
+      await bouncer
+      .with('FarmerPolicy')
+      .authorize('delete', farmer)
+
       return farmer.delete()
     }
 }

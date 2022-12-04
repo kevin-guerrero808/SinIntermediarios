@@ -14,24 +14,22 @@ export default class Product extends BaseModel {
 
   @column()
   public quantity: number;
-
+  
   @column()
   public unit: string;
 
   @column()
+  public price: number;
+
+  @column()
   public category: string;
+
+  @column()
+  public id_farm: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
-
-  @manyToMany(() => Farm, {
-    pivotTable: 'product_farms', //Nombre tabla pivote
-    pivotForeignKey: 'id_product',
-    pivotRelatedForeignKey:'id_farm',
-    pivotColumns: ['price'] //obtener datos de columnas  adicionales
-  })
-  public farms: ManyToMany<typeof Farm>
 }

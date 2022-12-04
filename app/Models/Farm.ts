@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Product from './Product';
 
 export default class Farm extends BaseModel {
@@ -10,28 +10,24 @@ export default class Farm extends BaseModel {
   public name: string;
 
   @column()
-  public direction: string;
+  public direction: string | null;
 
   @column()
-  public logo_url: string;
+  public logo_url: string | null;
 
   @column()
-  public imagen_url: string;
+  public imagen_url: string | null;
 
   @column()
-  public description: string;
+  public description: string | null;
 
   @column()
   public id_farmer: number
 
-  @manyToMany(() => Product, {
-    pivotTable: 'product_farms', //Nombre tabla pivote
-    pivotForeignKey: 'id_farm', //Nombre de la clave que está en esta    entidad
-    //pero en la tabla pivote
-    pivotRelatedForeignKey: 'id_product', //Nombre de la segunda clave    //que sirve de pivote en la    relación
-    pivotColumns: ['price', 'quantity'] //obtener datos de columnas    adicionales
+  @hasMany(() => Product, {
+    foreignKey: 'id_farm',
   })
-  public products: ManyToMany<typeof Product>
+  public products: HasMany<typeof Product>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
