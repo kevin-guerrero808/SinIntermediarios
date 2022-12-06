@@ -19,7 +19,6 @@ export default class ConsumersController {
       url_instagram: schema.string.optional(),
     })
     const userSchemaPayload = schema.create({
-      name: schema.string.optional(),
       email: schema.string.optional([
         rules.email()
       ]),

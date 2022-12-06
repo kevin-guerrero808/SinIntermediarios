@@ -23,7 +23,6 @@ export default class UsersController {
     */
     public async store({ auth, request, response}:HttpContextContract){
         const schemaPayload = schema.create({
-            name: schema.string(),
             email: schema.string([
                 rules.email()
             ]),
@@ -46,7 +45,7 @@ export default class UsersController {
             expiresIn: '44640 mins' // 31 daies
         })
         let plantilla_email: SecurityTemplate = new SecurityTemplate()
-        let html = plantilla_email.newUser(token)
+        let html = plantilla_email.newUser(token.token)
         let el_servicio_email: EmailService = new EmailService();
         el_servicio_email.sendEmail(payload.email, "Complete register", html)
         return newUser;
@@ -81,7 +80,6 @@ export default class UsersController {
     */
     public async update({request, bouncer, params}:HttpContextContract) {
         const schemaPayload = schema.create({
-            name: schema.string(),
             email: schema.string([
                 rules.email()
             ]),
