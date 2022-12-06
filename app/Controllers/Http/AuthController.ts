@@ -23,7 +23,10 @@ export default class AuthController {
             let el_servicio_email: EmailService = new EmailService();
             el_servicio_email.sendEmail(email, "Nuevo Inicio de Sesión", html)
             //Obtiene los datos correspondientes a la relación
-            await user.load("role");
+            await user.load("farmer")
+            await user.load("consumer")
+            await user.load("admin")
+            await user.load("role")
             user.password = ""
             return {
                 "token": token,
