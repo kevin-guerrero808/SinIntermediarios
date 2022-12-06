@@ -9,7 +9,7 @@ export default class ProductsController {
     public async index({ request }: HttpContextContract) {
       const queryParameters = request.qs()
       let products;
-      if (queryParameters) {
+      if (Object.keys(queryParameters).length > 0) {
         if (queryParameters.name) {
           products = await Product.query().where('name', queryParameters.name)
         }

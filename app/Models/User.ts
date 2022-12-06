@@ -6,6 +6,7 @@ import ApiToken from './ApiToken';
 import Hash from '@ioc:Adonis/Core/Hash';
 import Farmer from './Farmer';
 import Admin from './Admin';
+import Consumer from './Consumer';
 
 export default class User extends BaseModel {
   public static table = 'users'
@@ -41,6 +42,11 @@ export default class User extends BaseModel {
     foreignKey: 'id_user'
   })
   public admin: HasOne<typeof Admin>;
+
+  @hasOne(() => Consumer, {
+    foreignKey: 'id_user'
+  })
+  public consumer: HasOne<typeof Consumer>;
 
   @belongsTo(() => Role,{
     foreignKey: 'id_role', //Nombre de la clave foránea de la entidad dominante

@@ -1,4 +1,5 @@
-enum roles {
+export enum roles {
     ADMIN = "admin",
-    FARMER = "farmer"
+    FARMER = "farmer",
+    CONSUMER = "consumer"
 }

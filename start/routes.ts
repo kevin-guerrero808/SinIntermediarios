@@ -9,12 +9,12 @@
 |
 | Define routes in following two files
 | ├── start/routes/cart.ts
-| ├── start/routes/customer.ts
+| ├── start/routes/consumer.ts
 |
 | and then import them inside `start/routes.ts` as follows
 |
 | import './routes/cart'
-| import './routes/customer'
+| import './routes/consumer'
 |
 */
 
@@ -27,8 +27,10 @@ Route.get('/', async () => {
 import './routes/permissions';
 import './routes/roles';
 import './routes/farmers';
+import './routes/consumers';
 import './routes/users';
 import './routes/auth';
 import './routes/farms';
 import './routes/products';
+import './routes/orders';
 

@@ -1,4 +1,5 @@
 import { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
+import { roles } from 'App/enums/roles'
 import User from 'App/Models/User'
 
 export default class UserPolicy extends BasePolicy {

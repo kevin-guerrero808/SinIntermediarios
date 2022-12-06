@@ -6,6 +6,8 @@ import Profile from 'App/Models/Profile';
 import User from 'App/Models/User';
 import SecurityTemplate from 'App/Services/EmailTemplates/SecurityTemplate';
 import EmailService from 'App/Services/EmailService';
+import Role from 'App/Models/Role';
+import { roles } from 'App/enums/roles';
 export default class UsersController {
     /**
     * Lista todos los usuarios
@@ -49,6 +51,16 @@ export default class UsersController {
         el_servicio_email.sendEmail(payload.email, "Complete register", html)
         return newUser;
     }
+
+    /**
+     * Almacena la información de un usuario consumer
+     */
+     public async storeConsumer({ auth, request, response}:HttpContextContract){
+        const customerId: number = (await Role.query().where('name', roles.CONSUMER))[0].id;
+        request.updateBody({...request.body(), id_role: customerId});
+        console.log(request.body())
+        return await this.store({ auth, request, response } as HttpContextContract)
+     }
     /**
     * Muestra la información de un solo usuario
     */
