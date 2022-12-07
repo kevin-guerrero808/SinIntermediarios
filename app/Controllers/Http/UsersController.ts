@@ -40,12 +40,13 @@ export default class UsersController {
             symbols: true
         });
         const newUser : User =await User.create(payload);
+        await newUser.load('role')
         //Generación token
         const token = await auth.use('api').generate(newUser, {
             expiresIn: '44640 mins' // 31 daies
         })
         let plantilla_email: SecurityTemplate = new SecurityTemplate()
-        let html = plantilla_email.newUser(token.token)
+        let html = plantilla_email.newUser(token.token, newUser.role.name)
         let el_servicio_email: EmailService = new EmailService();
         el_servicio_email.sendEmail(payload.email, "Complete register", html)
         return newUser;

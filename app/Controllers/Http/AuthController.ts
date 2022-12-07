@@ -58,7 +58,8 @@ export default class AuthController {
                 expiresIn: '60 mins'
             })
             let plantilla_email: SecurityTemplate = new SecurityTemplate()
-            let html = plantilla_email.forgotPassword(token.token)
+            await user.load('role')
+            let html = plantilla_email.forgotPassword(token.token, user.role.name)
             let el_servicio_email: EmailService = new EmailService();
             el_servicio_email.sendEmail(email, "Solicitud restablecimiento de contraseña", html)
             respuesta = {

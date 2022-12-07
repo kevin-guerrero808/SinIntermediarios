@@ -6,7 +6,8 @@ import { roles } from 'App/enums/roles'
 
 export default class ProductPolicy extends BasePolicy {
     public async before(user: User | null) {
-      if (user!.related('role').relation.model.name !== roles.FARMER) {
+			await user?.load('role')
+      if (user!.role.name !== roles.FARMER) {
         return true
       }
     }
