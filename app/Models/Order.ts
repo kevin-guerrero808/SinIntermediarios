@@ -14,7 +14,7 @@ export default class Order extends BaseModel {
     pivotTable: 'product_orders',
     pivotForeignKey: 'id_order',
     pivotRelatedForeignKey: 'id_product', //Nombre de la segunda clave    //que sirve de pivote en la    relación
-    pivotColumns: ['price', 'quantity'] //obtener datos de columnas    adicionales
+    pivotColumns: ['price', 'quantity', 'price_date'] //obtener datos de columnas    adicionales
     })
     public products: ManyToMany<typeof Product>
 

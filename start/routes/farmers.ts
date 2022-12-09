@@ -8,6 +8,3 @@ Route.group(() => {
     Route.delete("/farmers/:id","FarmersController.destroy");
 
 }).middleware(['auth:api'])
-
-import './farms'
-import './products'

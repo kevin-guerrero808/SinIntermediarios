@@ -62,12 +62,12 @@ export default class FarmsController {
       return farm.delete()
     }
     public async indexByFarmer({ params }: HttpContextContract) {
-      const farmer: Farmer[] = await Farmer.query().where('id', params.id_farmer).preload('farms')
+      const farmer: Farmer = (await Farmer.query().where('id', params.id).preload('farms'))[0]
       if (!farmer) {
         return {
           error: "Don't found a farmer"
         }
       }
-      return farmer[0].farms;
+      return farmer.farms;
     }
 }

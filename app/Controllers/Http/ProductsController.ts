@@ -16,10 +16,11 @@ export default class ProductsController {
       } else {
         products = await Product.query()
       }
+
       return products
     }
     public async show({ params }: HttpContextContract) {
-      const product: Product = (await Product.query().where("id", params.id_product))[0]
+      const product: Product = (await Product.query().where("id", params.id))[0]
 
       return product
     }
